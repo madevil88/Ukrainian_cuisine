@@ -2,7 +2,7 @@
 
 import RegistrationForm from "@/Components/forms/registration.form";
 import CustomModal from "@/Components/common/modal";
-import { OverlayState } from "@/Components/common/types";
+import { OverlayState } from "@/types/overlay-state";
 
 const RegistrationModal = ({ state }: { state: OverlayState }) => {
   return (

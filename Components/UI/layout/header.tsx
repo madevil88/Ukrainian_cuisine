@@ -7,11 +7,25 @@ import { siteConfig } from "@/config/site.config";
 import { layoutConfig } from "@/config/layout.config";
 import RegistrationModal from "../modals/registration.modal";
 import LoginModal from "../modals/login.modal";
+import { signOutFunc } from "@/actions/sign-out";
+import { useSession } from "next-auth/react";
 
 const Header = () => {
   const registrationState = useOverlayState();
   const loginState = useOverlayState();
   const pathName = usePathname();
+
+  const { data: session, status } = useSession();
+
+  const isAuth = status === "authenticated";
+
+  const handleSignOut = async () => {
+    try {
+      await signOutFunc();
+    } catch (error) {
+      console.error("Failed to sign out:", error);
+    }
+  }
 
   const getNavItems = () => {
     return siteConfig.navItems.map((item) => {
@@ -55,11 +69,24 @@ const Header = () => {
         <ul className="hidden items-center gap-4 md:flex">
           {getNavItems()}
         </ul>
-
         <div className="hidden items-center gap-4 md:flex">
-          <Link onPress={loginState.open} href="#">Login</Link>
-          <Button onPress={registrationState.open}>Sign Up</Button>
+          {isAuth ? (
+            <>
+              <p>Welcome, {session?.user?.email}!</p>
+              <Button onPress={handleSignOut}>Log Out</Button>
+            </>
+          ) : (
+            <>
+              <Button onPress={loginState.open}>Log In</Button>
+              <Button onPress={registrationState.open}>Sign Up</Button>
+            </>
+          )}
         </div>
+        {/* <div className="hidden items-center gap-4 md:flex">
+          <Button onPress={handleSignOut}>Log Out</Button>
+          <Button onPress={loginState.open}>Log In</Button>
+          <Button onPress={registrationState.open}>Sign Up</Button>
+        </div> */}
       </div>
       <RegistrationModal state={registrationState} />
       <LoginModal state={loginState} />
