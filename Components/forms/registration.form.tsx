@@ -3,6 +3,7 @@
 import { Button, Form, Input } from "@heroui/react";
 import { useState } from "react";
 import { validateEmail, validatePassword } from "@/utils/validators";
+import { registerUser } from "@/actions/register";
 
 interface RegistrationFormProps {
   onClose: () => void;
@@ -47,6 +48,8 @@ const RegistrationForm = ({ onClose }: RegistrationFormProps) => {
     const isEmpty = Object.values(formData).some((v) => !v);
     if (hasErrors || isEmpty) return;
     console.log("Form submitted");
+    const result = await registerUser(formData);
+    console.log("Registration result:", result);
     onClose();
   };
 

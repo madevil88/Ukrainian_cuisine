@@ -3,6 +3,7 @@
 import { Button, Form, Input } from "@heroui/react";
 import { useState } from "react";
 import { validateEmail } from "@/utils/validators";
+import { signInWithCredentials } from "@/actions/sign-in";
 
 interface LoginFormProps {
   onClose: () => void;
@@ -37,6 +38,8 @@ const LoginForm = ({ onClose }: LoginFormProps) => {
     const isEmpty = Object.values(formData).some((v) => !v);
     if (hasErrors || isEmpty) return;
     console.log("Form submitted");
+
+    await signInWithCredentials(formData);
     onClose();
   };
 

@@ -2,7 +2,7 @@
 
 import LoginForm from "@/Components/forms/login.form";
 import CustomModal from "@/Components/common/modal";
-import { OverlayState } from "@/Components/common/types";
+import { OverlayState } from "@/types/overlay-state";
 
 const LoginModal = ({ state }: { state: OverlayState }) => {
   return (

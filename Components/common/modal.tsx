@@ -1,7 +1,7 @@
 "use client";
 
 import { Modal } from "@heroui/react";
-import { OverlayState } from "@/Components/common/types";
+import { OverlayState } from "@/types/overlay-state";
 
 const CustomModal = ({ children, state, title }: { children: React.ReactNode; state: OverlayState; title?: string }) => {
   return (
