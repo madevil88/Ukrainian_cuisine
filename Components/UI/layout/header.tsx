@@ -8,16 +8,14 @@ import { layoutConfig } from "@/config/layout.config";
 import RegistrationModal from "../modals/registration.modal";
 import LoginModal from "../modals/login.modal";
 import { signOutFunc } from "@/actions/sign-out";
-import { useSession } from "next-auth/react";
+import { useAuthStore } from "@/store/auth.store";
 
 const Header = () => {
   const registrationState = useOverlayState();
   const loginState = useOverlayState();
   const pathName = usePathname();
 
-  const { data: session, status } = useSession();
-
-  const isAuth = status === "authenticated";
+  const { isAuth, session, status, setAuthState } = useAuthStore();
 
   const handleSignOut = async () => {
     try {
@@ -25,7 +23,20 @@ const Header = () => {
     } catch (error) {
       console.error("Failed to sign out:", error);
     }
+    setAuthState("unauthenticated", null);
   }
+
+  const authContent = isAuth ? (
+    <>
+      <p>Welcome, {session?.user?.email}!</p>
+      <Button onPress={handleSignOut}>Log Out</Button>
+    </>
+  ) : (
+    <>
+      <Button onPress={loginState.open}>Log In</Button>
+      <Button onPress={registrationState.open}>Sign Up</Button>
+    </>
+  );
 
   const getNavItems = () => {
     return siteConfig.navItems.map((item) => {
@@ -51,8 +62,9 @@ const Header = () => {
     <nav
       style={{ height: layoutConfig.headerHeight }}
       className="sticky top-0 z-40 w-full border-b border-separator bg-background/70 backdrop-blur-lg">
-      <div className="mx-auto flex h-full max-w-5xl items-center justify-between px-6">
-        <div className="flex items-center gap-4">
+      <div className="mx-auto flex h-full items-center px-6">
+        {/* <div className="mx-auto flex h-full max-w-5xl items-center justify-between px-6"></div> */}
+        <div className="flex items-center gap-4 mr-2.5">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-1">
               <Image
@@ -69,24 +81,9 @@ const Header = () => {
         <ul className="hidden items-center gap-4 md:flex">
           {getNavItems()}
         </ul>
-        <div className="hidden items-center gap-4 md:flex">
-          {isAuth ? (
-            <>
-              <p>Welcome, {session?.user?.email}!</p>
-              <Button onPress={handleSignOut}>Log Out</Button>
-            </>
-          ) : (
-            <>
-              <Button onPress={loginState.open}>Log In</Button>
-              <Button onPress={registrationState.open}>Sign Up</Button>
-            </>
-          )}
+        <div className="hidden items-center gap-4 ml-auto md:flex">
+          {status === 'loading' ? <p>Loading...</p> : authContent}
         </div>
-        {/* <div className="hidden items-center gap-4 md:flex">
-          <Button onPress={handleSignOut}>Log Out</Button>
-          <Button onPress={loginState.open}>Log In</Button>
-          <Button onPress={registrationState.open}>Sign Up</Button>
-        </div> */}
       </div>
       <RegistrationModal state={registrationState} />
       <LoginModal state={loginState} />

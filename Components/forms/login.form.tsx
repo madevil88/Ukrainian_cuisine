@@ -2,14 +2,19 @@
 
 import { Button, Form, Input } from "@heroui/react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { getSession } from "next-auth/react";
 import { validateEmail } from "@/utils/validators";
 import { signInWithCredentials } from "@/actions/sign-in";
+import { useAuthStore } from "@/store/auth.store";
 
 interface LoginFormProps {
   onClose: () => void;
 }
 
 const LoginForm = ({ onClose }: LoginFormProps) => {
+  const router = useRouter();
+  const { setAuthState } = useAuthStore();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -37,10 +42,21 @@ const LoginForm = ({ onClose }: LoginFormProps) => {
     const hasErrors = Object.values(errors).some(Boolean);
     const isEmpty = Object.values(formData).some((v) => !v);
     if (hasErrors || isEmpty) return;
-    console.log("Form submitted");
 
-    await signInWithCredentials(formData);
-    onClose();
+    try {
+      await signInWithCredentials(formData);
+      const session = await getSession();
+      if (session) {
+        setAuthState("authenticated", session);
+        router.refresh();
+        onClose();
+      } else {
+        setErrors((prev) => ({ ...prev, password: "Invalid email or password" }));
+      }
+    } catch (error) {
+      console.error("Failed to sign in:", error);
+      setErrors((prev) => ({ ...prev, password: "Invalid email or password" }));
+    }
   };
 
   return (
