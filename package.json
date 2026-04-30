@@ -14,7 +14,6 @@
     "@heroui/react": "^3.0.3",
     "@heroui/styles": "^3.0.3",
     "@prisma/adapter-pg": "^7.8.0",
-    "@tailwindcss/oxide-darwin-arm64": "^4.2.4",
     "bcryptjs": "^3.0.3",
     "dompurify": "^3.4.1",
     "dotenv": "^17.4.2",
