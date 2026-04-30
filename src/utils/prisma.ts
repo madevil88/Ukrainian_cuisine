@@ -1,15 +1,17 @@
 import { PrismaClient } from "@/generated/prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
+import { withAccelerate } from "@prisma/extension-accelerate";
 
-const connectionString = process.env.DATABASE_URL;
-if (!connectionString) {
+const accelerateUrl = process.env.DATABASE_URL;
+if (!accelerateUrl) {
   throw new Error("DATABASE_URL environment variable is not set");
 }
 
-const adapter = new PrismaPg({ connectionString });
+const createPrisma = () => new PrismaClient({ accelerateUrl }).$extends(withAccelerate());
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
+type ExtendedPrismaClient = ReturnType<typeof createPrisma>;
 
-export const prisma = globalForPrisma.prisma || new PrismaClient({ adapter });
+const globalForPrisma = global as unknown as { prisma: ExtendedPrismaClient };
+
+export const prisma = globalForPrisma.prisma ?? createPrisma();
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;

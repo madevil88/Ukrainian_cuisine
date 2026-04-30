@@ -2,14 +2,13 @@
 
 import Image from "next/image";
 import { Link, Button, useOverlayState } from "@heroui/react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { siteConfig } from "@/config/site.config";
 import { layoutConfig } from "@/config/layout.config";
 import RegistrationModal from "../modals/registration.modal";
 import LoginModal from "../modals/login.modal";
-import { signOutFunc } from "@/actions/sign-out";
 import { useAuthStore } from "@/store/auth.store";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 const Header = () => {
   const registrationState = useOverlayState();
@@ -19,14 +18,12 @@ const Header = () => {
   const { data: session, status } = useSession();
   const isAuth = status === "authenticated";
   const { setAuthState } = useAuthStore();
+  const router = useRouter();
 
   const handleSignOut = async () => {
-    try {
-      await signOutFunc();
-    } catch (error) {
-      console.error("Failed to sign out:", error);
-    }
     setAuthState("unauthenticated", null);
+    await signOut({ redirect: false });
+    router.refresh();
   }
 
   const authContent = isAuth ? (

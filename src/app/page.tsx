@@ -1,6 +1,7 @@
 "use client";
 
 import RecipeCard from "@/components/common/recipe-card";
+import { useAuthStore } from "@/store/auth.store";
 import { useRecipeStore } from "@/store/recipe.store";
 import { Button } from "@heroui/react";
 import Link from "next/link";
@@ -13,14 +14,17 @@ import "swiper/css/navigation";
 
 export default function Home() {
   const { recipes, isLoading, error } = useRecipeStore();
+  const { isAuth } = useAuthStore();
 
   return (
     <>
-      <div className="flex w-full justify-center items-center mb-4">
-        <Link href="/recipes/new">
-          <Button variant="primary">Add recipe</Button>
-        </Link>
-      </div>
+      {isAuth && (
+        <div className="flex w-full justify-center items-center mb-4">
+          <Link href="/recipes/new">
+            <Button variant="primary">Add recipe</Button>
+          </Link>
+        </div>
+      )}
 
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
