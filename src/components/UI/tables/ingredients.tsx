@@ -23,7 +23,11 @@ const IngredientsTable = () => {
     return option ? option.label : value;
   };
 
-  return !isLoading && isAuth ? (
+  if (isLoading || !isAuth) {
+    return <p>Loading ingredients...</p>;
+  }
+
+  return (
     <Table className="mt-4 w-full">
       <TableContent aria-label="Ingredients list">
         <TableHeader>
@@ -60,8 +64,6 @@ const IngredientsTable = () => {
         </TableBody>
       </TableContent>
     </Table>
-  ) : (
-    <p>Loading ingredients...</p>
   );
 };
 

@@ -45,7 +45,7 @@ export const siteConfig = {
             A staple of Ukrainian cuisine and a cultural symbol.
           </li>
           <li>
-            <strong>Pampushky</strong> — soft garlic bread rolls traditionally served alongside borscht.
+            <strong>Banosh</strong> — a rich, velvety cornmeal porridge traditionally cooked in sour cream and served topped with crumbled sheep cheese (bryndza) and crispy pork cracklings.
           </li>
         </ul>
       `,

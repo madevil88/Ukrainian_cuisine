@@ -14,3 +14,11 @@ export const UNIT_OPTIONS = [
   { value: "MILLILITERS", label: "Milliliters" },
   { value: "PIECES", label: "Pieces" },
 ] as const;
+
+export const UNIT_ABBREVIATIONS = [
+  { value: "GRAMS", label: "g" },
+  { value: "KILOGRAMS", label: "kg" },
+  { value: "LITERS", label: "l" },
+  { value: "MILLILITERS", label: "ml" },
+  { value: "PIECES", label: "pcs" },
+] as const;

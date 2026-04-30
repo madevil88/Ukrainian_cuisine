@@ -70,7 +70,7 @@ const LoginForm = ({ onClose }: LoginFormProps) => {
           placeholder="Enter your email"
           type="email"
           value={formData.email}
-          className="bg-default-100 text-sm"
+          className="w-full bg-default-100 text-sm"
           onChange={handleEmailChange}
         />
         {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
@@ -83,7 +83,7 @@ const LoginForm = ({ onClose }: LoginFormProps) => {
           placeholder="Enter password"
           type="password"
           value={formData.password}
-          className="bg-default-100 text-sm"
+          className="w-full bg-default-100 text-sm"
           onChange={handlePasswordChange}
         />
         {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
