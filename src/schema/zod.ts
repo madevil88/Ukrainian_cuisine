@@ -8,6 +8,9 @@ import {
   optional,
 } from "zod";
 import { Category, Unit } from "@/generated/prisma/enums";
+import { MIN_PASSWORD_LENGTH } from "@/utils/validators";
+
+const MAX_PASSWORD_LENGTH = 32;
 
 export const ingredientSchema = object({
   name: string().min(1, "Name is required"),
@@ -21,6 +24,6 @@ export const signInSchema = object({
   email: email({ error: "Invalid email" }),
   password: string({ error: "Password is required" })
     .min(1, "Password is required")
-    .min(6, "Password must be more than 6 characters")
-    .max(32, "Password must be less than 32 characters"),
+    .min(MIN_PASSWORD_LENGTH, `Password must be at least ${MIN_PASSWORD_LENGTH} characters`)
+    .max(MAX_PASSWORD_LENGTH, `Password must be less than ${MAX_PASSWORD_LENGTH} characters`),
 });

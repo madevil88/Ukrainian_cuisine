@@ -3,12 +3,12 @@ import { create } from "zustand";
 
 type SessionStatus = "authenticated" | "unauthenticated" | "loading";
 
-interface AuthState {
+type AuthState = {
   isAuth: boolean;
   status: SessionStatus;
   session: Session | null;
   setAuthState: (status: SessionStatus, session: Session | null) => void;
-}
+};
 
 export const useAuthStore = create<AuthState>((set) => ({
   isAuth: false,

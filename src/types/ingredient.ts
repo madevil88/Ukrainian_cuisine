@@ -7,6 +7,6 @@ export type Ingredient = {
   unit: Unit;
   pricePerUnit: number | null;
   description: string | null;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 };

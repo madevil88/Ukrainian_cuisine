@@ -24,3 +24,12 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@utility image-zoom {
+  object-fit: cover;
+  transition: transform 300ms;
+
+  .group:hover & {
+    transform: scale(1.05);
+  }
+}

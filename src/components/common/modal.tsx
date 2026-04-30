@@ -10,7 +10,7 @@ const CustomModal = ({ children, state, title }: { children: React.ReactNode; st
         <Modal.Container>
           <Modal.Dialog>
             <Modal.CloseTrigger />
-            <Modal.Header style={{ alignItems: 'center' }}>
+            <Modal.Header className="items-center">
               <Modal.Heading
                 className="text-lg font-bold text-gray-900">
                 {title}

@@ -6,18 +6,24 @@ import {
   deleteIngredient,
 } from "@/actions/ingredients";
 
-interface IngredientState {
+type ActionResult = {
+  success: boolean;
+  ingredient?: Ingredient;
+  error?: string;
+};
+
+type IngredientState = {
   ingredients: Ingredient[];
   isLoading: boolean;
   error: string | null;
   loadIngredients: () => Promise<void>;
-  addIngredient: (formData: FormData) => Promise<void>;
+  addIngredient: (formData: FormData) => Promise<ActionResult>;
   removeIngredient: (id: string) => Promise<void>;
-}
+};
 
 export const useIngredientStore = create<IngredientState>((set) => ({
   ingredients: [],
-  isLoading: false,
+  isLoading: true,
   error: null,
 
   loadIngredients: async () => {
@@ -34,23 +40,27 @@ export const useIngredientStore = create<IngredientState>((set) => ({
   },
 
   addIngredient: async (formData: FormData) => {
-    set({ error: null });
     const result = await createIngredient(formData);
     if (result.error) {
-      set({ error: result.error });
-    } else if (result.ingredient) {
+      return { success: false, error: result.error };
+    }
+    if (result.ingredient) {
       set((state) => ({
         ingredients: [...state.ingredients, result.ingredient as Ingredient],
       }));
     }
+    return { success: true, ingredient: result.ingredient as Ingredient };
   },
 
   removeIngredient: async (id: string) => {
     const previous = useIngredientStore.getState().ingredients;
-    set((state) => ({
-      ingredients: state.ingredients.filter((i) => i.id !== id),
-      error: null,
-    }));
+    set((state) => {
+      const index = state.ingredients.findIndex((i) => i.id === id);
+      return {
+        ingredients: index === -1 ? state.ingredients : state.ingredients.toSpliced(index, 1),
+        error: null,
+      };
+    });
     const result = await deleteIngredient(id);
     if (result.error) {
       set({ ingredients: previous, error: result.error });

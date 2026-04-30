@@ -3,7 +3,8 @@
 import { Session } from "next-auth";
 import { useAuthStore } from "@/store/auth.store";
 import { useIngredientStore } from "@/store/ingredient.store";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
+import { useRecipeStore } from "@/store/recipe.store";
 
 type AppLoaderProps = {
   children: React.ReactNode;
@@ -13,15 +14,7 @@ type AppLoaderProps = {
 const AppLoader = ({ children, session }: AppLoaderProps) => {
   const { loadIngredients } = useIngredientStore();
   const { isAuth, setAuthState } = useAuthStore();
-
-  const initialized = useRef(false);
-  if (!initialized.current) {
-    setAuthState(
-      session ? "authenticated" : "unauthenticated",
-      session,
-    );
-    initialized.current = true;
-  }
+  const { loadRecipes } = useRecipeStore();
 
   useEffect(() => {
     setAuthState(
@@ -35,6 +28,10 @@ const AppLoader = ({ children, session }: AppLoaderProps) => {
       loadIngredients();
     }
   }, [isAuth, loadIngredients]);
+
+  useEffect(() => {
+    loadRecipes();
+  }, [loadRecipes]);
 
   return <>{children}</>;
 };

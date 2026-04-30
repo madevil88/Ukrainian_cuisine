@@ -24,7 +24,7 @@ const IngredientForm = () => {
   const [isPending, startTransition] = useTransition();
   const { addIngredient } = useIngredientStore();
 
-  const handleSubmit = async (FormData: FormData) => {
+  const handleSubmit = (fd: FormData) => {
     if (!formData.name) {
       setNameError("Name is required");
       return;
@@ -42,13 +42,12 @@ const IngredientForm = () => {
     }
 
     startTransition(async () => {
-      await addIngredient(FormData);
-      const storeError = useIngredientStore.getState().error;
-      if (storeError) {
-        setError(storeError);
-      } else {
-        setError(null);
+      setError(null);
+      const result = await addIngredient(fd);
+      if (result.success) {
         setFormData(initialState);
+      } else {
+        setError(result.error ?? "Failed to save ingredient");
       }
     });
   };
@@ -164,10 +163,7 @@ const IngredientForm = () => {
               className="w-full bg-default-100 text-sm"
               onChange={handlePriceChange}
             />
-            <span
-              className="absolute right-3 text-sm text-field-placeholder pointer-events-none"
-              style={{ top: "50%", transform: "translateY(-50%)" }}
-            >
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-field-placeholder pointer-events-none">
               ₴
             </span>
           </div>

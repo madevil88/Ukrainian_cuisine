@@ -1,8 +1,6 @@
 import bcryptjs from "bcryptjs";
 
-export const saultAndHashPassword = async (
-  password: string,
-): Promise<string> => {
-  const saltRounds = 10;
-  return await bcryptjs.hash(password, saltRounds);
-};
+const SALT_ROUNDS = 10;
+
+export const saltAndHashPassword = (password: string) =>
+  bcryptjs.hash(password, SALT_ROUNDS);

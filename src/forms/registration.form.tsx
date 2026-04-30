@@ -22,6 +22,9 @@ const RegistrationForm = ({ onClose }: RegistrationFormProps) => {
     confirmPassword: "",
   });
 
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.trim();
     setFormData((prev) => ({ ...prev, email: value }));
@@ -36,10 +39,14 @@ const RegistrationForm = ({ onClose }: RegistrationFormProps) => {
 
   const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setFormData(prev => ({ ...prev, confirmPassword: value }));
-    if (!value) setErrors((prev) => ({ ...prev, confirmPassword: "Password confirmation is required" }));
-    else if (value !== formData.password) setErrors((prev) => ({ ...prev, confirmPassword: "Passwords do not match" }));
-    else setErrors((prev) => ({ ...prev, confirmPassword: "" }));
+    setFormData((prev) => ({ ...prev, confirmPassword: value }));
+    if (!value) {
+      setErrors((prev) => ({ ...prev, confirmPassword: "Password confirmation is required" }));
+    } else if (value === formData.password) {
+      setErrors((prev) => ({ ...prev, confirmPassword: "" }));
+    } else {
+      setErrors((prev) => ({ ...prev, confirmPassword: "Passwords do not match" }));
+    }
   };
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
@@ -47,16 +54,24 @@ const RegistrationForm = ({ onClose }: RegistrationFormProps) => {
     const hasErrors = Object.values(errors).some(Boolean);
     const isEmpty = Object.values(formData).some((v) => !v);
     if (hasErrors || isEmpty) return;
-    console.log("Form submitted");
+
+    setSubmitError(null);
+    setIsSubmitting(true);
     const result = await registerUser(formData);
-    console.log("Registration result:", result);
-    onClose();
+    setIsSubmitting(false);
+
+    if (result.success) {
+      onClose();
+    } else {
+      setSubmitError(result.error);
+    }
   };
 
   return (
     <Form className="w-full flex flex-col gap-3 p-1"
       onSubmit={handleSubmit}
     >
+      {submitError && <p className="text-sm text-red-500">{submitError}</p>}
       <div className="w-full">
         <Input
           required
@@ -65,7 +80,7 @@ const RegistrationForm = ({ onClose }: RegistrationFormProps) => {
           placeholder="Enter your email"
           type="email"
           value={formData.email}
-          className="bg-default-200 text-sm"
+          className="w-full bg-default-100 text-sm"
           onChange={handleEmailChange}
         />
         {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
@@ -78,7 +93,7 @@ const RegistrationForm = ({ onClose }: RegistrationFormProps) => {
           placeholder="Enter password"
           type="password"
           value={formData.password}
-          className="bg-default-200 text-sm"
+          className="w-full bg-default-100 text-sm"
           onChange={handlePasswordChange}
         />
         {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
@@ -91,7 +106,7 @@ const RegistrationForm = ({ onClose }: RegistrationFormProps) => {
           placeholder="Confirm password"
           type="password"
           value={formData.confirmPassword}
-          className="bg-default-200 text-sm"
+          className="w-full bg-default-100 text-sm"
           onChange={handleConfirmPasswordChange}
         />
         {errors.confirmPassword && <p className="text-sm text-red-500 mt-1">{errors.confirmPassword}</p>}
@@ -100,7 +115,7 @@ const RegistrationForm = ({ onClose }: RegistrationFormProps) => {
         <Button variant="ghost" onPress={onClose}>
           Cancel
         </Button>
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" isDisabled={isSubmitting}>
           Register
         </Button>
       </div>

@@ -21,7 +21,7 @@ export const createIngredient = async (formData: FormData) => {
 
     const ingredient = await prisma.ingredient.create({ data: validatedData });
 
-    return { error: null, ingredient };
+    return { ingredient };
   } catch (error) {
     if (error instanceof ZodError) {
       return { error: error.issues.map((e) => e.message).join(", ") };
@@ -34,8 +34,7 @@ export const createIngredient = async (formData: FormData) => {
 export const getIngredients = async () => {
   try {
     const ingredients = await prisma.ingredient.findMany();
-
-    return { success: true, ingredients };
+    return { ingredients };
   } catch (error) {
     console.error("Error fetching ingredients:", error);
     return { error: "Error fetching ingredients" };
@@ -44,11 +43,8 @@ export const getIngredients = async () => {
 
 export const deleteIngredient = async (id: string) => {
   try {
-    const ingredient = await prisma.ingredient.delete({
-      where: { id },
-    });
-
-    return { success: true, ingredient };
+    await prisma.ingredient.delete({ where: { id } });
+    return { success: true as const };
   } catch (error) {
     console.error("Error deleting ingredient:", error);
     return { error: "Error deleting ingredient" };

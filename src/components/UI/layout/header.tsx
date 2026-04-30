@@ -73,7 +73,6 @@ const Header = () => {
       style={{ height: layoutConfig.headerHeight }}
       className="sticky top-0 z-40 w-full border-b border-separator bg-background/70 backdrop-blur-lg">
       <div className="mx-auto flex h-full items-center px-6">
-        {/* <div className="mx-auto flex h-full max-w-5xl items-center justify-between px-6"></div> */}
         <div className="flex items-center gap-4 mr-2.5">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-1">
