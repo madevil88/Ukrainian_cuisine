@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRecipeStore } from "@/store/recipe.store";
 import { UNIT_ABBREVIATIONS } from "@/constants/select-options";
 import { Recipe } from "@/types/recipe";
+import { useAuthStore } from "@/store/auth.store";
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -20,6 +21,7 @@ const getUnitLabel = (unit: string) => {
 const RecipeCard = ({ recipe }: RecipeCardProps) => {
   const { removeRecipe } = useRecipeStore();
   const [isPending, startTransition] = useTransition();
+  const { isAuth } = useAuthStore();
 
   const handleDelete = () => {
     startTransition(async () => {
@@ -71,18 +73,20 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
         </ul>
       </Card.Content>
 
-      <div className="flex justify-end gap-2 p-4">
-        <Link href={`/recipes/${recipe.id}`}>
-          <Button variant="ghost">Edit</Button>
-        </Link>
-        <Button
-          variant="danger-soft"
-          onPress={handleDelete}
-          isDisabled={isPending}
-        >
-          Delete
-        </Button>
-      </div>
+      {isAuth && (
+        <div className="flex justify-end gap-2 p-4">
+          <Link href={`/recipes/${recipe.id}`}>
+            <Button variant="ghost">Edit</Button>
+          </Link>
+          <Button
+            variant="danger-soft"
+            onPress={handleDelete}
+            isDisabled={isPending}
+          >
+            Delete
+          </Button>
+        </div>
+      )}
     </Card>
   );
 };

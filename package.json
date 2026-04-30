@@ -1,5 +1,5 @@
 {
-  "name": "Ukrainian_cuisine",
+  "name": "ukrainian_cuisine",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -15,6 +15,7 @@
     "@heroui/react": "^3.0.3",
     "@heroui/styles": "^3.0.3",
     "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/extension-accelerate": "^3.0.1",
     "bcryptjs": "^3.0.3",
     "dompurify": "^3.4.1",
     "dotenv": "^17.4.2",
